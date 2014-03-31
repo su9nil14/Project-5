@@ -27,17 +27,11 @@ public class Stack<T extends Comparable<T>>
 		head = null;
 	} //Constructor
 	
-	/**
-	 * @return False if the list is empty, true if it is not empty
-	 */
 	public boolean isEmpty()
 	{
 		return (head==null);
 	} //Return the boolean on whether the stack is empty or not
 
-	/**
-	 * Justification: TODO
-	 */
 	public void push(T data)
 	{
 		
@@ -46,10 +40,6 @@ public class Stack<T extends Comparable<T>>
 		
 	} //Insert the new data on the top of the stack
 	 
-	/**
-	 * @return Returns the data from the top of the stack,
-	 * null if the stack is empty.
-	 */
 	public T pop()
 	{
 		if(isEmpty()) return null;
@@ -59,28 +49,5 @@ public class Stack<T extends Comparable<T>>
 		return data;
 	} //Returns then delete the head of the stack, null if empty
 	
-	/**
-	 * @return: A String form of the stack starting from the head
-	 */
-	public String toString()
-	{
-		String s = "";
-	    boolean isFirst = true; 
-
-	    // iterate over the list, starting from the head
-	    Node<T> i = head;
-	    while (i != null)
-	    {
-	    	if (!isFirst)
-	    {
-	        s += ",";
-        }
-	    isFirst = false;
-	    s += i.data.toString();
-	    i = i.next;
-	    }
-
-	    return s;
-	} //To String method for stack
 	
 }
