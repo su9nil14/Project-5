@@ -189,7 +189,7 @@ public abstract class MazeCell {
 		/**
 		 *  The state when a cell has been visited, but
 		 *  hasn't been fully processed (perhaps its calculating
-		 *  a heruristic, or its neighbors haven't been fully
+		 *  a heuristic, or its neighbors haven't been fully
 		 *  traversed yet when executing an algorithm like dfs)
 		 */
 		public static final CellState visitInProgress;
@@ -214,7 +214,7 @@ public abstract class MazeCell {
 		 *  to be able to control exactly how many objects of
 		 *  this type are in existence.  The constructor takes
 		 *  an argument <code>i</code> which is the internal
-		 *  number we use to differentiate between teh different
+		 *  number we use to differentiate between the different
 		 *  instances. I suppose we could actually use the
 		 *  constant references themselves to implement
 		 *  identification, but doing it this way allows us to

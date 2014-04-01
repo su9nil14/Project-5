@@ -5,12 +5,11 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 
 /**
- * This is a laucher program that will do the command line parsing and
- * instantiate runners and mazes and run them.
- *
- * @author Albert J. Wong (U Washington)
+ * This is the launcher that runs BFSMazeRunner
+ * Modified from the MazeRunnerLauncher
+ * @ModificationAuthor Cian Cronin (Student No. 12310411)
  */
-public class MazeRunnerLauncher {
+public class BFSMazeRunnerLauncher {
 
 	/**
 	 * Parse the command line and instantiate the maze and maze
@@ -87,7 +86,7 @@ public class MazeRunnerLauncher {
 		}
 
 
-		/* Default to a random maze runner if no runner option
+		/* Default to BFS maze runner if no runner option
 		 * is given
 		 */
 		if( runner == null ) {
@@ -138,7 +137,7 @@ public class MazeRunnerLauncher {
 	 * Prints the Usage to standard error.
 	 */
 	private static void printUsage() {
-		System.err.println("Usage: java MazeRunnerLauncher [-r] [-v] [-t] [-p milliseconds] <mazefile>");
+		System.err.println("Usage: java BFSMazeRunnerLauncher [-r] [-v] [-t] [-p milliseconds] <mazefile>");
 		System.err.println("\t-r -- Use the BFSMazeRunner (default if no other runner specified)\n");
 		System.err.println("\t-v -- visualizer maze graphically");
 		System.err.println("\t-t -- Output tracing information");

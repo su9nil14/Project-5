@@ -1,143 +1,131 @@
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Deque;
 import java.io.PrintWriter;
 import java.util.Iterator;
-import java.util.Random;
 
 /**
- * This implements a BFS Maze Runner Algorithm
+ * This implements a BFS Maze Runner Algorithm modified from the class
+ * RandomMazeRunner to suit this algorithm in its use of queue
  *
- * @author Cian Cronin
+ * @author Cian Cronin (Student No. 12310411)
+ * @Version 01/04/2014 18:40
  */
 public class BFSMazeRunner<MC extends MazeCell> extends MazeRunner<MC> {
+	
+	private Queue<MC> unvis = new LinkedList<MC>(); //Unvisited nodes for BFS algorithm
+	private Deque<MC> sol = new LinkedList<MC>(); //Recorded nodes for solution path
+			//used the deque data structure for easy printing of solution path
 
 	/**
-	 * This class holds a data struture that is meant to be inserted
-	 * as a closure in each cell along the expansion path so that we
-	 * can retrace the path from the donut to the start.  It is
-	 * essentially used to create a linked list...or kind of a
-	 * reverse tree (where the children know their parents, but the
-	 * parents don't know their children...stupid irresponsible
-	 * parents).
-	 */
-	private class SolutionPathInfo {
-		/**
-		 * Link to the next cell in the solution path.
-		 */
-		public MC nextInSolution;
-	}
-
-
-	/**
-	 * Tries to find a solution to the given maze.   This function
-	 * is the core of the random maze runner.  It chooses a random
-	 * neighboring node to expand and goes that way.  Think of it as
-	 * a lost child in the woods looking for the way home stumbling
-	 * around from spot to spot until it runs out of enery...err
-	 * maybe not.
+	 * Tries to find the solution to the given maze by the BFS Algorithm
+	 * Steps in BFS Algorithm:
+	 * 1. Start at initial cell. 
+	 * 2. Put all unvisited neighbours into a queue.
+	 * 3. Pull from the queue
+	 * 4. This is now the node to check the neighbours of and repeat steps 2 & 3 until the donut is found
 	 *
-	 * @param maze		The maze to solve.
-	 * @param writer	The printwriter on which to output the
-	 * 			maze solution.
+	 * @param Maze<MC> maze		The maze to solve.
+	 * @param PrintWriter writer	The printwriter on which to output the maze solution. (For Testing also)
 	 */
 	public void solveMaze(Maze<MC> maze, PrintWriter writer) {
-		int cellsExpanded;
-		MC curCell;
+		int cellsExpanded = 0;
+		unvis.add(maze.getStart());
+		maze.getStart().setState(MazeCell.CellState.visitInProgress);
+		MC current = maze.getStart();
 
-		// This is the actual solving engine.  Beginning from the
-		// start cell, a random path to a neighboring cell is chosen.
-		// If the neighboring cell is the donut, we solved the maze.
-		// If not, repeat.
-		cellsExpanded = 0;
-		curCell = maze.getStart();
-		while(!curCell.isDonut()) {
+		while (!current.isDonut()) {
 			cellsExpanded++;
-
-			// Mark the cell as visitInProgress so the listeners
-			// (like the visualizer) can know what's happening.
-			curCell.setState(MazeCell.CellState.visitInProgress);
-
-			// Get a random neighbor and place it into the solution
-			// path list.
-			SolutionPathInfo info = getSolutionPathInfo(curCell);
-			MC nextCell = getRandomNeighbor(maze, curCell);
-
-			// Mark the cell VISITED now and move on.
-			curCell.setState(MazeCell.CellState.visited);
-			info.nextInSolution = nextCell;
-			curCell = nextCell;
+			
+			current = (MC) unvis.peek(); //Set the current cell to head of queue
+			
+			sol.add(unvis.peek()); //Add the cell to be popped to sol queue to print solution path.
+			
+			if(unvis.peek()!=null) //If the unvisited cells is not empty
+				unvis.remove(); //Remove cell from unvis queue
+			else //If there is no solution path write and return
+			{
+				writer.print("No solution path found");
+				return;
+			}
+			
+			if (maze.getDonut() == current) //If the current cell is the donut 
+			{
+				//Do Nothing as solution is found
+			} 
+			else //The current cell is not the solution, continue search
+			{ 
+				Iterator<MC> i = maze.getNeighbors(current);
+				MC next = null;
+				while (i.hasNext()) 
+				{
+					next = i.next();
+					if (next.getState() == MazeCell.CellState.notVisited) 
+					{
+						//Neighbour found, set state to visit in progress and add to unvis
+						next.setState(MazeCell.CellState.visitInProgress);
+						unvis.add(next);
+					}
+				}
+				// Set current cell's state to visited, prepared to be popped.
+				current.setState(MazeCell.CellState.visited);
+			}
 		}
-
-		// We've solved the maze, so now we output the solution.
-		writer.println("Random");
-
-		// Loop through the solution list starting from the first cell
-		// and print the path to "writer"
-		curCell = maze.getStart();
+		
+		//Output string for solution path, using deque data structure
 		int pathLength = 0;
-		while(!curCell.isDonut()) {
-			pathLength++;
+		String solutionString = "";
+		writer.print("BFS Solution Path: ");
 
-			writer.print(curCell + " ");
+		while (sol.getLast() != maze.getStart()) 
+		{
+			MC currentCell = sol.getLast();
+			sol.removeLast();
+			MC possibleNeighbour = sol.getLast();
 
-			// Mark the path as "ON_SOLUTION_PATH" so the listeners
-			// can know that this is part of the solution.
-			curCell.setState(MazeCell.CellState.solutionPath);
-
-			SolutionPathInfo info = getSolutionPathInfo(curCell);
-			curCell = info.nextInSolution;
+			if (isAdjacentNeighbour(currentCell, possibleNeighbour, maze)) {
+				
+				if (currentCell.isDonut()) //If cell is donut do not print space behind it
+					solutionString =  currentCell + solutionString;
+				else //O/W add cell and space as deque
+					solutionString = currentCell + " " + solutionString;
+				
+				pathLength++;
+			} 
+			else //O/W not a neighbour, remove previous from deque, re-add to last in queue
+			{
+				sol.removeLast();
+				sol.addLast(currentCell);
+			}
 		}
+		
+		solutionString = maze.getStart() + " " + solutionString; //Add initial cell
 
-		// The loop above misses the last cell so just print it.
-		writer.println(curCell + " ");
-		writer.println(pathLength);
-		writer.println(cellsExpanded);
+		writer.print(solutionString + "\n"); //The solution path string printed for tests
+		writer.print(pathLength + "\n"); //Length of the path printed for tests
+		writer.print(cellsExpanded); //Cells expanded printed for tests
 	}
 
 	/**
-	 * A helper function that chooses a random path out of the current
-	 * cell.  It picks a random neighboring node and moves that way.
-	 *
-	 * @param maze 	The maze in which we are trying to find the
-	 * 	donut.
-	 * @param curCell	The current cell we are on.  We choose a
-	 * 	random neighbor of this cell in the previous maze.
+	 * Method for isAdjacentNeighbour
+	 * 
+	 * @param MC CurrentCell - the current cell which you will find the neighbour of maze
+	 * @param Maze<MC> maze - the maze in which the cells are contained.
+	 * @param MC nextCell - the cell to check if it is a neighbour of the currentCell
+	 * @return true if nextCell is neighbour of currentCell, false o/w
 	 */
-	private MC getRandomNeighbor(Maze<MC> maze, MC curCell) {
-		Iterator<MC> it = maze.getNeighbors(curCell);
-		int pickNum = randSeq.nextInt(curCell.getMaxNumWalls() -
-			curCell.getNumWalls());
-		MC nextCell = null;
-
-		// This is guaranteed to never iterate off the end of the
-		// neighbors list so we don't need to check it.hasNext().
-		for(int i=0; i <= pickNum; i++) {
-			nextCell = it.next();
+	private boolean isAdjacentNeighbour(MC CurrentCell, MC adjacentCell, Maze<MC> maze) {
+		Iterator<MC> iterator = maze.getNeighbors(CurrentCell);
+		while (iterator.hasNext())
+		{
+			MC neighbour = iterator.next();
+			
+			//If the adjacent cell is a neighbour of CurrentCell, return true
+			if (adjacentCell == neighbour) return true;
+			
 		}
-
-		return nextCell;
+		
+		return false; //Return false if all adjacent cells checked and no neighbours found
 	}
 
-	/**
-	 * A helper function that returns a pointer to the SolutionPathInfo
-	 * associated with a given cell.  This funciton takes care of
-	 * creating and associating an instance of SolutionPathInfo if
-	 * one does not already exist.
-	 *
-	 * @param curCell	The cell from which we retrieve the
-	 * 	SolutionPathInfo closure.
-	 */
-	private SolutionPathInfo getSolutionPathInfo(MazeCell curCell)
-	{
-		if(null == curCell.getExtraInfo()) {
-			curCell.setExtraInfo( new SolutionPathInfo() );
-		}
-
-		return (SolutionPathInfo)curCell.getExtraInfo();
-	}
-
-	/**
-	 * A random number sequence object that is used generate random
-	 *  numbers for our random maze runner...how random.
-	 */
-	private Random randSeq = new Random();
-	//private Random randSeq = new Random(0); // use this instead for debugging
 }
