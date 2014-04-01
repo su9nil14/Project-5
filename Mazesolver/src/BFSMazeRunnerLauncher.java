@@ -6,7 +6,7 @@ import java.io.PrintWriter;
 
 /**
  * This is the launcher that runs BFSMazeRunner
- * Modified from the MazeRunnerLauncher
+ * Modified from the MazeRunnerLauncher (Just changed RandomMazeRunner to BFSMazeRunner)
  * @ModificationAuthor Cian Cronin (Student No. 12310411)
  */
 public class BFSMazeRunnerLauncher {

@@ -15,10 +15,8 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 /**
- * This JUnit test class invokes the Maze solver(s) on a number of input mazes.
- * See following link on parameterized JUnit testing:
- * http://examples.javacodegeeks.com/core-java/junit/junit-parameterized-test-example/
- *
+ * This JUnit test class invokes the BFSMazeRunner for a number of mazes
+ * in the initial files for project
  */
 @RunWith(Parameterized.class)
 public class BFSMazeRunnerTest {
@@ -31,9 +29,7 @@ public class BFSMazeRunnerTest {
 	  this.expectedOutput = expectedOutput;
   }
 
-  // this is how you tell JUnit the values of the parameter
-
-  @Parameters
+  @Parameters //Expected results from BFS testing against from BFSMazeRunner
   public static Iterable<String[]> inputFilesAndExpectedResults() {
     return Arrays.asList(new String[][] {
       {"maze1.txt","BFS Solution Path: (0,0) (1,0) (2,0) (2,1) (2,2)\n4\n12"},
@@ -48,8 +44,8 @@ public class BFSMazeRunnerTest {
       		+ "(14,12) (13,12) (12,12) (11,12) (10,12) (9,12) (9,11) (9,10) (8,10) (8,9) (8,8) (8,7) (8,6) (8,5) (7,5) (7,6) (6,6) "
       		+ "(6,7) (5,7) (5,8) (5,9) (5,10) (5,11) (4,11) (3,11) (3,10) (2,10) (2,9) (1,9) (0,9) (0,8) (1,8) (2,8) (2,7) (3,7) (3,6) "
       		+ "(3,5) (3,4) (2,4) (1,4) (1,3) (0,3) (0,2) (0,1) (1,1) (1,0) (0,0)\n57\n400"},
-      {"nopath1.txt","No solution path found"},  // the random maze runner loops forever for these mazes
-      {"nopath2.txt","No solution path found"},
+      {"nopath1.txt","No solution path found"}, //Changed the lines for unvis queue in BFSMazeRunner class 
+      {"nopath2.txt","No solution path found"}, //to interact for these specific circumstances
       {"obstacles1.txt","BFS Solution Path: (0,0) (1,0) (2,0) (3,0) (3,1) (3,2) (3,3)\n6\n15"},
       {"obstacles2.txt","BFS Solution Path: (2,2) (3,2) (3,3) (3,4) (3,5) (4,5) (4,6) (4,7) (4,8) (4,9) (4,10) (4,11) (5,11) (6,11) "
       		+ "(7,11) (8,11) (9,11) (10,11) (10,12) (10,13) (10,14) (10,15) (11,15) (12,15) (13,15)\n24\n258"},
@@ -81,7 +77,7 @@ public class BFSMazeRunnerTest {
   }
 
 
-  //~ Test the RandomMazeRunner ..........................................................
+  //~ Test the BFSMazeRunner ..........................................................
   @Test
   public void testRandomMazeRunner()
   {
@@ -102,7 +98,7 @@ public class BFSMazeRunnerTest {
 	  	// ensure the writer is closed so it flushes the output.
 	  	writer.close();
 
-      // this will fail for the random runner because each time it returns another path
+      // Changed now so that it is successful with the expectedOutput for BFSMazeRunner
       assertEquals("RandomMazeRunner solved maze " + mazeFile, expectedOutput, output.toString());
 
 	  } catch (FileNotFoundException fnfe) {
