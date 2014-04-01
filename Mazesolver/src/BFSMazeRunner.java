@@ -39,7 +39,7 @@ public class BFSMazeRunner<MC extends MazeCell> extends MazeRunner<MC> {
 			
 			current = (MC) unvis.peek(); //Set the current cell to head of queue
 			
-			sol.add(unvis.peek()); //Add the cell to be popped to sol queue to print solution path.
+			sol.add(unvis.peek()); //Add the cell to be removed to sol queue to print solution path.
 			
 			if(unvis.peek()!=null) //If the unvisited cells is not empty
 				unvis.remove(); //Remove cell from unvis queue
