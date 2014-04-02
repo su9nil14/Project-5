@@ -79,7 +79,7 @@ public abstract class Maze<MC extends MazeCell> {
 
 		while(it.hasNext()) {
 			(it.next()).setState(
-				MC.CellState.notVisited);
+				MazeCell.CellState.notVisited);
 		}
 	}
 

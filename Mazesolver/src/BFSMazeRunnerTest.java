@@ -99,7 +99,7 @@ public class BFSMazeRunnerTest {
 	  	writer.close();
 
       // Changed now so that it is successful with the expectedOutput for BFSMazeRunner
-      assertEquals("RandomMazeRunner solved maze " + mazeFile, expectedOutput, output.toString());
+      assertEquals("BFSMazeRunner solved maze " + mazeFile, expectedOutput, output.toString());
 
 	  } catch (FileNotFoundException fnfe) {
 	  	System.err.println("Could not find file " + mazeFile);
