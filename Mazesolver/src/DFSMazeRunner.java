@@ -1,26 +1,30 @@
 import java.io.PrintWriter;
 import java.util.Iterator;
 import java.util.Stack;
-import java.util.Vector;
+
+
 
 /**
  * This implementation uses a nonrecursive version of depth-first search
  * using stack.
  *
- * @author Sunil Gautam (Student No. 12312253)
+ * @author Sunil Gautam (Student No. 12312253) + credit to Cian cronin for printing the solution path method
  * @Version 01/04/2014 18:40
  */
 public class DFSMazeRunner<MC extends MazeCell> extends MazeRunner<MC> {
 	
 	private class SolutionPathInfo {
+		
+		public MC nextInSolution;
 	}
 	
 	
-	private Stack<MC> stack;
+	private Stack<MC> stack,sol;
 	
 	public DFSMazeRunner()
 	{
 		stack = new Stack<MC>();
+		sol = new Stack<MC>();
 
 	}
 
@@ -30,52 +34,45 @@ public class DFSMazeRunner<MC extends MazeCell> extends MazeRunner<MC> {
 	 * @param Maze<MC> maze		The maze to solve.
 	 * @param PrintWriter writer	The print writer on which to output the maze solution. (For Testing also)
 	 */
+	@SuppressWarnings("unchecked")
 	public void solveMaze(Maze<MC> maze, PrintWriter writer) 
 	{
-		MC curCell = maze.getStart();
-		solveHelper(maze,curCell,stack,writer);
-	
-		}
-
-	private void solveHelper(Maze<MC> maze, MC curCell, Stack<MC> stack2, PrintWriter writer) {
+		int cellsExpanded = 0;
+		MC curCell = maze.getStart();		
+		stack.push(curCell);
+		curCell.setState(MazeCell.CellState.visited);
+		SolutionPathInfo info = getSolutionPathInfo(curCell);
 		
-		stack2.push(curCell);
-		if(curCell.isDonut()){
-			writer.println("DFS" + curCell);
-		}
-		
-		Iterator<MC> i = maze.getNeighbors(curCell);
-		MC next=null;
-		
-		while(i.hasNext()){
+		while(!stack.isEmpty()){
+			cellsExpanded++;
+			sol.push(stack.peek());	//for the test
 			
-			next = i.next();
-			
-			if (next.getState() == MazeCell.CellState.notVisited) 
-			{
-				//Neighbour found, set state to visit in progress and add to unvis
-				next.setState(MazeCell.CellState.visited);
-				writer.println("DFS" + next);
-				stack2.push(next);
+			MC n = stack.pop();
+			//System.out.print(n.toString() +  " ");
+			Iterator<MC> i = maze.getNeighbors(n);
+			MC next = null;
+					
+			while(i.hasNext()){
+				next = i.next();
+				if((next.getState()) == MazeCell.CellState.notVisited){
+					
+					next.setState(MazeCell.CellState.visited);
+					stack.push(next);
+				}
 			}
 		}
-		
-		writer.println("DFS" + stack2);
-		stack2.pop();
-		
-		
-		
+	
 		//Output string for solution path
 				int pathLength = 0; //Path length for output
 				String solutionString = "";
 				
 				writer.print("DFS Solution Path: "); //Puts this initial string into writer for output
 
-				while (stack2.lastElement() != maze.getStart()) //Iterates through the solution deque, end is start of maze
+				while (sol.lastElement() != maze.getStart()) //Iterates through the solution deque, end is start of maze
 				{
-					MC currentCell = stack2.lastElement();
-					stack2.remove(stack2.lastElement());
-					MC possibleNeighbour = stack2.lastElement();
+					MC currentCell = sol.lastElement();
+					sol.remove(sol.lastElement());
+					MC possibleNeighbour = sol.lastElement();
 
 					if (isAdjacentNeighbour(currentCell, possibleNeighbour, maze)) 
 					{
@@ -89,16 +86,17 @@ public class DFSMazeRunner<MC extends MazeCell> extends MazeRunner<MC> {
 					} 
 					else //o/w not a neighbour, remove previous from deque, re-add to last in queue
 					{
-						stack2.remove(stack2.lastElement());						
-						stack2.add(pathLength-1, currentCell);
+						sol.remove(sol.lastElement());						
+						
 					}
+					curCell = info.nextInSolution;
 				}
 				
 				solutionString = maze.getStart() + " " + solutionString; //Add start of maze to writer
 
 				writer.print(solutionString + "\n"); //The solution path string printed for tests
 				writer.print(pathLength + "\n"); //Length of the path printed for tests
-				//writer.print(cellsExpanded); //Cells expanded printed for tests
+				writer.print(cellsExpanded); //Cells expanded printed for tests
 				
 	}
 
