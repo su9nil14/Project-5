@@ -20,6 +20,7 @@ public class BFSMazeRunnerLauncher {
 		boolean useTracer = false;
 		long updateInterval = 500;
 		MazeRunner<SquareCell> runner = null;
+		Visualiser<SquareCell> visualiser=null;
 
 		// Check basic argument validity and print usage information.
 		if(args.length < 1) {
@@ -28,16 +29,23 @@ public class BFSMazeRunnerLauncher {
 		}
 
 		int i=0;
+		
+		if( args[i].equals("-BFS") ) {
+			i++;
+			runner = new BFSMazeRunner<SquareCell>();
+		}
 
 		if( args[i].equals("-r") ) {
 			i++;
-			runner = new BFSMazeRunner<SquareCell>();
+			runner = new RandomMazeRunner<SquareCell>();
 		}
 
 		// Simple parsing of the parameters.
 		if( args[i].equals("-v") ) {
 			i++;
 			useVisualizer = true;
+			runner = new BFSMazeRunner<SquareCell>();
+			visualiser=new Visualiser<SquareCell>(runner);
 		}
 
 		if(i>= args.length) {

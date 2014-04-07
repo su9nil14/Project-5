@@ -107,8 +107,10 @@ public class BFSMazeRunner<MC extends MazeCell> extends MazeRunner<MC> {
 			} 
 			else //o/w not a neighbour, remove previous from deque, re-add to last in queue
 			{
-				sol.removeLast();
+				sol.removeLast();				
 				sol.addLast(currentCell);
+				
+
 			}
 		}
 		
@@ -119,6 +121,7 @@ public class BFSMazeRunner<MC extends MazeCell> extends MazeRunner<MC> {
 		writer.print(cellsExpanded); //Cells expanded printed for tests
 	}
 
+	
 	/**
 	 * Method for isAdjacentNeighbour
 	 * 
