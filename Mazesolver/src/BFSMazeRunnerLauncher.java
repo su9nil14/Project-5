@@ -21,6 +21,7 @@ public class BFSMazeRunnerLauncher {
 		long updateInterval = 500;
 		MazeRunner<SquareCell> runner = null;
 		Visualiser<SquareCell> visualiser=null;
+		
 
 		// Check basic argument validity and print usage information.
 		if(args.length < 1) {
@@ -45,7 +46,7 @@ public class BFSMazeRunnerLauncher {
 			i++;
 			useVisualizer = true;
 			runner = new BFSMazeRunner<SquareCell>();
-			visualiser=new Visualiser<SquareCell>(runner);
+			//visualiser=new Visualiser<SquareCell>(runner);
 		}
 
 		if(i>= args.length) {

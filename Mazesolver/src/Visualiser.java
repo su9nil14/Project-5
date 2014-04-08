@@ -1,5 +1,5 @@
 import java.awt.Color;
-import java.awt.Component;
+import java.awt.Image;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
@@ -9,16 +9,17 @@ public class Visualiser<MC extends MazeCell> extends JFrame implements MazeChang
 	private static final Color VISITED_COLOR = new Color(192, 228, 255);
 	private JLabel visitedCountLabel;	
 	private JFrame j;
+	private MC mc;
+	private int HEIGHT=500,WIDTH=500;
 
-	public Visualiser(MazeRunner<SquareCell> runner) {
-		j=new JFrame();
-		j.setTitle("Maze Visualiser");
-		j.setSize(500, 500);
-		j.setLocationRelativeTo(null);
-		j.setBackground(Color.BLACK);
+	public Visualiser(Maze<MC> maze,MC mc) {
+		this.mc=mc;
+		j = new JFrame("Maze solver");
 		j.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		visitedCountLabel = new JLabel("Visited: 0");
-		j.setVisible(true);
+		j.setContentPane(new PuzzleFrameGUI<MC>(3,3,mc, maze));
+		j.setSize(HEIGHT, WIDTH);
+		j.show();  // make window visible
+		j.setResizable(false);
 	}
 
 	public void stateChangeEvent() {
@@ -28,8 +29,9 @@ public class Visualiser<MC extends MazeCell> extends JFrame implements MazeChang
 
 	@Override
 	public void cellStateChangeEvent(MazeCell cell){
-		// TODO Auto-generated method stub
-
+		cell.notify();
+		stateChangeEvent();
+		
 	}
 
 	/**
@@ -57,5 +59,6 @@ public class Visualiser<MC extends MazeCell> extends JFrame implements MazeChang
 		mc.setState(MazeCell.CellState.visited);
 		updateMoves(mc);
 	}
+
 
 }

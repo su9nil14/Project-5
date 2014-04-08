@@ -16,11 +16,13 @@ public class BFSMazeRunner<MC extends MazeCell> extends MazeRunner<MC> {
 	private Queue<MC> unvis; //Unvisited nodes for BFS algorithm
 	private Deque<MC> sol; //Recorded nodes for solution path
 			//used the deque data structure for easier printing of solution path
+	private int row,col;
 	
 	public BFSMazeRunner() //Constructor to initilise: unvis & sol
 	{
 		unvis = new LinkedList<MC>();
 		sol = new LinkedList<MC>();
+		
 	}
 
 	/**
@@ -39,10 +41,15 @@ public class BFSMazeRunner<MC extends MazeCell> extends MazeRunner<MC> {
 		
 		int cellsExpanded = 0;
 		unvis.add(maze.getStart());
-		
-		maze.getStart().setState(MazeCell.CellState.visitInProgress);
-		
 		MC current = maze.getStart();
+		Visualiser<MC> v=new Visualiser<MC>(maze, current);
+		row=current.getMaxNumWalls();
+		col=row-current.getNumWalls();
+		new PuzzleFrameGUI<MC>(row,col,current, maze);
+		
+		maze.getStart().setState(MazeCell.CellState.visitInProgress);	
+		maze.broadcastChange();
+		
 
 		while (!current.isDonut()) {
 			cellsExpanded++;
@@ -75,11 +82,15 @@ public class BFSMazeRunner<MC extends MazeCell> extends MazeRunner<MC> {
 					{
 						//Neighbour found, set state to visit in progress and add to unvis
 						next.setState(MazeCell.CellState.visitInProgress);
+						next.broadcastChange();
+
 						unvis.add(next);
 					}
 				}
 				// Set current cell's state to visited, prepared to be popped.
 				current.setState(MazeCell.CellState.visited);
+				current.broadcastChange();
+
 			}
 		}
 		

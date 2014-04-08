@@ -136,20 +136,6 @@ public class DFSMazeRunner<MC extends MazeCell> extends MazeRunner<MC> {
 
 		return false; //Return false if all adjacent cells checked and no neighbours found
 	}
-	private class SolutionPathInfo {
-		/**
-		 * Link to the next cell in the solution path.
-		 */
-		public MC nextInSolution;
-	}
-	
-	private SolutionPathInfo getSolutionPathInfo(MazeCell curCell)
-	{
-		if(null == curCell.getExtraInfo()) {
-			curCell.setExtraInfo( new SolutionPathInfo() );
-		}
 
-		return (SolutionPathInfo)curCell.getExtraInfo();
-	}
 
 }
