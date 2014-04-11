@@ -34,7 +34,10 @@ public class DFSMazeRunnerLauncher {
 			i++;
 			runner = new DFSMazeRunner<>();
 		}
-
+		if( args[i].equals("-BFS") ) {
+			i++;
+			runner = new BFSMazeRunner<>();
+		}
 
 		// Simple parsing of the parameters.
 		if( args[i].equals("-v") ) {

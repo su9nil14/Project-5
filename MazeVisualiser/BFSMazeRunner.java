@@ -16,6 +16,7 @@ public class BFSMazeRunner<MC extends MazeCell> extends MazeRunner<MC> {
 	private Queue<MC> unvis; //Unvisited nodes for BFS algorithm
 	private Deque<MC> sol; //Recorded nodes for solution path
 			//used the deque data structure for easier printing of solution path
+	private int row,col;
 	
 	public BFSMazeRunner() //Constructor to initilise: unvis & sol
 	{
@@ -41,8 +42,10 @@ public class BFSMazeRunner<MC extends MazeCell> extends MazeRunner<MC> {
 		int cellsExpanded = 0;
 		unvis.add(maze.getStart());
 		MC current = maze.getStart();
-
-			
+		row=current.getMaxNumWalls();
+		col=row-current.getNumWalls();
+		new PuzzleFrameGUI<MC>(row,col,current, maze);
+		
 		maze.getStart().setState(MazeCell.CellState.visitInProgress);	
 		//maze.broadcastChange();
 		

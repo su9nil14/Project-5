@@ -5,12 +5,11 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 
 /**
- * This is a laucher program that will do the command line parsing and
- * instantiate runners and mazes and run them.
- * 
- * @Author Sunil Gautam (Student No. 12312253)
+ * This is the launcher that runs BFSMazeRunner
+ * Modified from the MazeRunnerLauncher (Just changed RandomMazeRunner to BFSMazeRunner)
+ * @ModificationAuthor Cian Cronin (Student No. 12310411)
  */
-public class DFSMazeRunnerLauncher {
+public class BFSMazeRunnerLauncher {
 
 	/**
 	 * Parse the command line and instantiate the maze and maze
@@ -21,6 +20,8 @@ public class DFSMazeRunnerLauncher {
 		boolean useTracer = false;
 		long updateInterval = 500;
 		MazeRunner<SquareCell> runner = null;
+		Visualiser<SquareCell> visualiser=null;
+		
 
 		// Check basic argument validity and print usage information.
 		if(args.length < 1) {
@@ -29,17 +30,23 @@ public class DFSMazeRunnerLauncher {
 		}
 
 		int i=0;
-
-		if( args[i].equals("-DFS") ) {
+		
+		if( args[i].equals("-BFS") ) {
 			i++;
-			runner = new DFSMazeRunner<>();
+			runner = new BFSMazeRunner<SquareCell>();
 		}
 
+		if( args[i].equals("-r") ) {
+			i++;
+			runner = new RandomMazeRunner<SquareCell>();
+		}
 
 		// Simple parsing of the parameters.
 		if( args[i].equals("-v") ) {
 			i++;
 			useVisualizer = true;
+			runner = new BFSMazeRunner<SquareCell>();
+			//visualiser=new Visualiser<SquareCell>(runner);
 		}
 
 		if(i>= args.length) {
@@ -88,11 +95,11 @@ public class DFSMazeRunnerLauncher {
 		}
 
 
-		/* Default to DFS maze runner if no runner option
+		/* Default to BFS maze runner if no runner option
 		 * is given
 		 */
 		if( runner == null ) {
-			runner = new RandomMazeRunner<>();
+			runner = new BFSMazeRunner<SquareCell>();
 		}
 
 
@@ -139,8 +146,8 @@ public class DFSMazeRunnerLauncher {
 	 * Prints the Usage to standard error.
 	 */
 	private static void printUsage() {
-		System.err.println("Usage: java DFSMazeRunnerLauncher [-r] [-v] [-t] [-p milliseconds] <mazefile>");
-		System.err.println("\t-r -- Use the DFSMazeRunner (default if no other runner specified)\n");
+		System.err.println("Usage: java BFSMazeRunnerLauncher [-r] [-v] [-t] [-p milliseconds] <mazefile>");
+		System.err.println("\t-r -- Use the BFSMazeRunner (default if no other runner specified)\n");
 		System.err.println("\t-v -- visualizer maze graphically");
 		System.err.println("\t-t -- Output tracing information");
 		System.err.println("\t-p -- wait between moving to each cell for visualizer. Use with -v.");

@@ -4,22 +4,27 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 
+import javax.swing.JFrame;
+
 /**
  * This is a laucher program that will do the command line parsing and
  * instantiate runners and mazes and run them.
- * 
- * @Author Sunil Gautam (Student No. 12312253)
+ *
+ * @author Albert J. Wong (U Washington)
  */
-public class DFSMazeRunnerLauncher {
+public class MazeRunnerLauncher {
 
 	/**
 	 * Parse the command line and instantiate the maze and maze
 	 * runner and then run the maze runner on the maze.
 	 */
+	
+
 	public static void main(String[] args) {
+
 		boolean useVisualizer = false;
 		boolean useTracer = false;
-		long updateInterval = 500;
+		long updateInterval = 100;
 		MazeRunner<SquareCell> runner = null;
 
 		// Check basic argument validity and print usage information.
@@ -30,11 +35,10 @@ public class DFSMazeRunnerLauncher {
 
 		int i=0;
 
-		if( args[i].equals("-DFS") ) {
+		if( args[i].equals("-r") ) {
 			i++;
-			runner = new DFSMazeRunner<>();
+			runner = new RandomMazeRunner<SquareCell>();
 		}
-
 
 		// Simple parsing of the parameters.
 		if( args[i].equals("-v") ) {
@@ -88,11 +92,11 @@ public class DFSMazeRunnerLauncher {
 		}
 
 
-		/* Default to DFS maze runner if no runner option
+		/* Default to a random maze runner if no runner option
 		 * is given
 		 */
 		if( runner == null ) {
-			runner = new RandomMazeRunner<>();
+			runner = new DFSMazeRunner<SquareCell>();
 		}
 
 
@@ -106,23 +110,39 @@ public class DFSMazeRunnerLauncher {
 			// Attach the visualizer if -v flag given
 			if(useVisualizer) {
 				//*** add your code here if doing extra credit visualizer
+				// create a new visualizer
+				Visualiser<SquareCell> v = new Visualiser<SquareCell>( maze);
+				// add the visualizer to maze's list of listeners
+				maze.addMazeChangeListener(v);
+				// set up the visualizer and make it visible
+				v.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				v.stateChangeEvent();
+				v.pack();
+				v.setVisible(true);
 			}
 
 			// Attach the tracer if -t flag given
 			if(useTracer) {
 				PrintWriter debugWriter = new PrintWriter(
-					new OutputStreamWriter(System.err), true);
+						new OutputStreamWriter(System.err), true);
 
 				maze.addMazeChangeListener(
-					new SquareCellMazeTracer(debugWriter));
+						new SquareCellMazeTracer(debugWriter));
 			}
 
 			// This is why Java I/O sucks sometimes.
 			PrintWriter writer = new PrintWriter(
-				new BufferedWriter(new OutputStreamWriter(System.out)), true);
+					new BufferedWriter(new OutputStreamWriter(System.out)), true);
 
-			// Solve the mazer
-			runner.solveMaze(maze, writer,0);
+			if (useVisualizer) {
+				synchronized (runner) {
+					runner.solveMaze(maze, writer, updateInterval);
+				}
+			} else {
+				// Solve the mazer
+				runner.solveMaze(maze, writer, 0);
+			}
+			
 
 			// ensure the writer is closed so it flushes the output.
 			writer.close();
@@ -132,15 +152,14 @@ public class DFSMazeRunnerLauncher {
 		} catch (IOException ioe) {
 			System.err.println("Error reading file " + args[i]);
 		}
-
 	}
 
 	/**
 	 * Prints the Usage to standard error.
 	 */
 	private static void printUsage() {
-		System.err.println("Usage: java DFSMazeRunnerLauncher [-r] [-v] [-t] [-p milliseconds] <mazefile>");
-		System.err.println("\t-r -- Use the DFSMazeRunner (default if no other runner specified)\n");
+		System.err.println("Usage: java MazeRunnerLauncher [-r] [-v] [-t] [-p milliseconds] <mazefile>");
+		System.err.println("\t-r -- Use the RandomMazeRunner (default if no other runner specified)\n");
 		System.err.println("\t-v -- visualizer maze graphically");
 		System.err.println("\t-t -- Output tracing information");
 		System.err.println("\t-p -- wait between moving to each cell for visualizer. Use with -v.");

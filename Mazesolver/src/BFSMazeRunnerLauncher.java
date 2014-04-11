@@ -20,9 +20,8 @@ public class BFSMazeRunnerLauncher {
 		boolean useTracer = false;
 		long updateInterval = 500;
 		MazeRunner<SquareCell> runner = null;
-		Visualiser<SquareCell> visualiser=null;
 		
-
+	
 		// Check basic argument validity and print usage information.
 		if(args.length < 1) {
 			printUsage();
@@ -99,7 +98,7 @@ public class BFSMazeRunnerLauncher {
 		 * is given
 		 */
 		if( runner == null ) {
-			runner = new BFSMazeRunner<SquareCell>();
+			runner = new DFSMazeRunner<SquareCell>();
 		}
 
 
@@ -129,7 +128,7 @@ public class BFSMazeRunnerLauncher {
 				new BufferedWriter(new OutputStreamWriter(System.out)), true);
 
 			// Solve the mazer
-			runner.solveMaze(maze, writer);
+			runner.solveMaze(maze, writer,0);
 
 			// ensure the writer is closed so it flushes the output.
 			writer.close();
