@@ -231,11 +231,61 @@ bigmaze9.txt:
       		96
       		1589
 *****************************************************************************************************************************************
-2.Which of the two (DFS/BFS) solvers is better for each input file?
+2.Which method is better for each input file: (Comparison of cells expanded)
 **********************************************************************
 
+maze1.txt: BFS is more efficient
 
 
+maze2.txt: DFS is more efficient
+
+      
+maze3.txt: BFS is more efficient
+
+
+maze4.txt: DFS is more efficient
+
+
+nocycles1.txt: DFS is more efficient
+
+
+nocycles2.txt: DFS is more efficient
+
+
+nopath1.txt: Neither is better
+
+
+nopath2.txt: Neither is better
+
+
+obstacles1.txt: DFS is more efficient
+
+
+obstacles2.txt: DFS is more efficient
+
+      
+bigmaze1.txt: DFS is more efficient
+
+      
+bigmaze2.txt: DFS is more efficient
+
+
+bigmaze3.txt: DFS is more efficient
+
+
+bigmaze4.txt: DFS is more efficient
+
+
+bigmaze5.txt: DFS is more efficient
+
+
+bigmaze6.txt: DFS is more efficient
+
+
+bigmaze7.txt:DFS is more efficient
+
+
+bigmaze9.txt: DFS is more efficient
 
 *****************************************************************************************************************************************
 3.Which kind of mazes a DFS solver is more likely to be better than a BFS solver, and vice-versa?
@@ -247,4 +297,8 @@ It means that it will have to load those parts(cells) of the maze from memory of
 
 BFS tends to find the shortest path on the given maze because it essentially checks all possible paths in order from shortest to longest.
 DFS is not guaranteed to give a shortest path.
+
+Therefore DFS is more efficient overall in the input files in the comparison of the cells expanded figures. But the BFS implementation
+shows the most efficient solution path. The kinds of mazes that BFS is better than DFS is smaller mazes. While increasing complexity 
+of the mazes makes the DFS implementation more efficient in terms of search time.	
 
