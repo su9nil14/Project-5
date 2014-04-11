@@ -5,6 +5,9 @@ Team Members
 URL- http://gitlab.scss.tcd.ie/programming-techniques-ii/project-5/tree/b3c67b89b4a97ab7f713e8c6511a6d61ebbf1413
 
 ***********************************************************************************************************************************
+1.Outputs of the solvers
+*************************
+
 DFS SolutionPath:
 maze1.txt: 
 (0,0) (1,0) (2,0) (3,0) (3,1) (3,2) (3,3) (2,3) (1,3) (1,2) (2,2)
@@ -227,3 +230,21 @@ bigmaze9.txt:
       		(38,37) (39,37) (39,38) (39,39)
       		96
       		1589
+*****************************************************************************************************************************************
+2.Which of the two (DFS/BFS) solvers is better for each input file?
+**********************************************************************
+
+
+
+
+*****************************************************************************************************************************************
+3.Which kind of mazes a DFS solver is more likely to be better than a BFS solver, and vice-versa?
+*************************************************************************************************
+If the MazeRunners we implemented were given a big maze too large to fit in main memory, such as bigmaze9.txt, DFS would likely run faster. 
+DFS has much lower memory requirements than BFS.This can be explained because DFS looks for paths on contiguous maze cells as it is
+implemented by using Stack. Whereas BFS tends to jump around, looking for path on cells all over the maze. 
+It means that it will have to load those parts(cells) of the maze from memory of the computer more often than DFS would do.
+
+BFS tends to find the shortest path on the given maze because it essentially checks all possible paths in order from shortest to longest.
+DFS is not guaranteed to give a shortest path.
+
